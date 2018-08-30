@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import * as firebase from 'firebase';
+import * as firebase from 'firebase'
+
  class RoomList extends Component {
 
     constructor(props){
@@ -30,7 +31,7 @@ formatName(str) {
      <div>
        {
         this.state.rooms.map ( ( room, key ) =>
-         <p>{this.formatName(room.name)}</p>
+         <p className="roomNames" key={room.key}>{this.formatName(room.name)}</p>
         )}
       </div>
    );
