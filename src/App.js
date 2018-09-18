@@ -14,35 +14,35 @@ import MessageList from './components/MessageList';
   };
   firebase.initializeApp(config);
 
+class App extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      currentRoomId: ""
+    };
+  }
 
-  class App extends Component {
-    constructor(props){
-      super(props);
-      this.state = {
-        currentRoomId: 0
-      };
-    }
-  
-    handleRoomSelect(roomId){
-      this.setState({currentRoomId: roomId});
-    }
-  
-    render() {
-      return (
-        <div className="App">
-         <h1>Bloc Chat</h1>
-         <RoomList
-         handleRoomSelect={(e) => this.handleRoomSelect(e) }
-         firebase = {firebase}
-         />
-         <MessageList
-         firebase = {firebase}
-         currentRoomId = {this.state.currentRoomId}
-         />
-        </div>
-      );
-    }
+  handleRoomSelect(roomId){
+    this.setState({currentRoomId: roomId});
   }
   
   
-  export default App;
+  render() {
+    return (
+      <div className="App">
+       <h1>Bloc Chat</h1>
+       <RoomList
+       handleRoomSelect={(e) => this.handleRoomSelect(e) }
+       firebase = {firebase}
+       />
+       <MessageList
+       firebase = {firebase}
+       currentRoomId = {this.state.currentRoomId}
+       />
+      </div>
+    );
+  }
+}
+
+
+export default App;
