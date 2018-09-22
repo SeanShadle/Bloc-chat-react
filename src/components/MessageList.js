@@ -7,10 +7,26 @@ class MessageList extends Component {
     this.state = {
        allMessages: [],
        messages: [],
+       content: ''
     };
     this.messageRef = this.props.firebase.database().ref('Messages');
   }
   
+  createNewMessage(e){
+    e.preventDefault();
+    const newMessage = this.state.content;
+    this.messageRef.push({
+      content: newMessage,
+      username: this.props.currentUsername,
+      roomId: this.props.currentRoomId
+    });
+    this.setState({ content: ' '});
+  }
+
+  handleNewMessage(e) {
+    this.setState({ content: e.target.value });
+  }
+
   componentDidMount() {
     // console.log("CDM called. Here's State: ", this.state)
     this.messageRef.on('child_added', (snapshot) => this.loadMessageList(snapshot));
@@ -56,11 +72,21 @@ componentWillUnmount(){
 
   render(){
      return(
-       <ul>{
+       <div>
+        <ul>
+        </ul>
+        <ul>
+        {
         this.state.messages.map( (message, index) =>
          <li key={index}>{message.content}</li>
         )
-      }</ul>
+        }
+        </ul>
+        <form onSubmit={(e) => this.createNewMessage(e)}>
+          <input type="text" value={this.state.content} onChange={(e) => this.handleNewMessage(e)}/>
+          <button>Send</button>
+          </form>
+          </div>
      );
   }
 }
