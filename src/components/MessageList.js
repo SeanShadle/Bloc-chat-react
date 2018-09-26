@@ -19,8 +19,8 @@ class MessageList extends Component {
       content: newMessage,
       username: this.props.currentUsername,
       roomId: this.props.currentRoomId
-    });
-    this.setState({ content: ' '});
+    }, () => this.updateMessages(this.props.currentRoomId));
+    this.setState({ content: ''});
   }
 
   handleNewMessage(e) {
@@ -42,13 +42,15 @@ class MessageList extends Component {
       return -1;
     };
 
-    console.log("LoadMessageList called. Here's State: ", this.state)
-    // console.log("snapshot:", snapshot.key)
     const message = snapshot.val();
     message.key = snapshot.key;
-    findWithAttr(this.state.allMessages, "roomId", message.roomId) < 0
-      ? this.setState({ allMessages: this.state.allMessages.concat( message )})
-      : null;
+    
+    this.setState({ allMessages: this.state.allMessages.concat( message )})    
+    const uniqueArray = this.state.allMessages.filter( (item, index) => {
+      return findWithAttr(this.state.allMessages, "key", item.key) === index;
+    })
+
+    this.setState({ allMessages: uniqueArray })
   }
 
  componentWillReceiveProps(nextProps){
@@ -59,10 +61,10 @@ class MessageList extends Component {
  }
 
 updateMessages(currentRoomId){
-  // console.log(currentRoomId)
   const currentMessages = this.state.allMessages.filter(function(e){
     return e.roomId === currentRoomId;
   });
+  console.log(currentMessages, "Also, updateMessages was called.")
   this.setState({ messages: currentMessages });
 }
 
@@ -73,20 +75,18 @@ componentWillUnmount(){
   render(){
      return(
        <div>
-        <ul>
-        </ul>
-        <ul>
-        {
-        this.state.messages.map( (message, index) =>
-         <li key={index}>{message.content}</li>
-        )
-        }
-        </ul>
-        <form onSubmit={(e) => this.createNewMessage(e)}>
-          <input type="text" value={this.state.content} onChange={(e) => this.handleNewMessage(e)}/>
-          <button>Send</button>
-          </form>
-          </div>
+         <ul>
+         </ul>
+         <ul>
+           { this.state.messages.map((message, index) =>
+               <li key={index}>{message.username}: {message.content}</li>
+             )}
+         </ul>
+         <form onSubmit={(e) => this.createNewMessage(e)}>
+           <input type="text" value={this.state.content} onChange={(e) => this.handleNewMessage(e)} />
+           <button>Send</button>
+         </form>
+       </div>
      );
   }
 }

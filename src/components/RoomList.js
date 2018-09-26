@@ -46,9 +46,9 @@ class RoomList extends Component {
        this.state.rooms.map ( ( room, index ) =>
        <li key={room.key} onClick={()=>{
          this.props.handleRoomSelect(room.key);
-        //  console.log("Room: ", room);
+        //  console.log("Room: ", room, "currentRoom: ", this.props.currentRoomId);
          }}>
-         {room.name}
+         {room.name} {room.key === this.props.currentRoomId ? <span>{"<=="}</span> : null}
         </li>
       )}
      </ul>
