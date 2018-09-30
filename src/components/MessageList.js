@@ -19,7 +19,7 @@ class MessageList extends Component {
       content: newMessage,
       username: this.props.currentUsername,
       roomId: this.props.currentRoomId
-    }, () => this.updateMessages(this.props.currentRoomId));
+    }, () => this.componentWillReceiveProps(this.props));
     this.setState({ content: ''});
   }
 
@@ -28,8 +28,10 @@ class MessageList extends Component {
   }
 
   componentDidMount() {
-    // console.log("CDM called. Here's State: ", this.state)
-    this.messageRef.on('child_added', (snapshot) => this.loadMessageList(snapshot));
+      setInterval(() => {
+        this.messageRef.on('child_added', (snapshot) => this.loadMessageList(snapshot));
+        this.updateMessages(this.props.currentRoomId);
+      }, 500)
   }
 
   loadMessageList(snapshot){
@@ -54,8 +56,6 @@ class MessageList extends Component {
   }
 
  componentWillReceiveProps(nextProps){
-  //  console.log("CWRP called. Here's State: ", this.state)
-  //  console.log("Next Props: ", nextProps)
   this.messageRef.on('child_added', (snapshot) => this.loadMessageList(snapshot));
   this.updateMessages(nextProps.currentRoomId);
  }
@@ -64,7 +64,6 @@ updateMessages(currentRoomId){
   const currentMessages = this.state.allMessages.filter(function(e){
     return e.roomId === currentRoomId;
   });
-  console.log(currentMessages, "Also, updateMessages was called.")
   this.setState({ messages: currentMessages });
 }
 
